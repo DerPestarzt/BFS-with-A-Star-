@@ -5,6 +5,8 @@
 #include<stdlib.h>
 #include<stdbool.h>
 
+#include <math.h>
+
 typedef struct Item tItem;
 typedef struct Block tBlock;
 typedef struct Fila tFila;
@@ -12,6 +14,7 @@ typedef struct Fila tFila;
 struct Item{
 	int x;
 	int y;
+	int valor;
 };
 
 struct Block{
@@ -31,5 +34,10 @@ void Desenfileira(tFila *f, tItem *pos);
 void FImprime(tFila *f);
 void ImprimirMatriz(int tam, int **matriz);
 void BFS(int **matriz, int tam);
+
+int manhattan(int x1, int x2, int y1, int y2);
+double euclidiana(int x1, int x2, int y1, int y2);
+double raiz(double val);
+double potencia(double val, double exp);
 
 #endif
