@@ -1,5 +1,7 @@
 #include "fila.h"
 
+#define modulo(X)(X >= 0 ? X : -(X))
+
 void FFVazia(tFila *f)
 {
 	f->first = (tBlock *)malloc(sizeof(tBlock));
@@ -68,171 +70,270 @@ void BFS(int **matriz, int tam)
 		printf("\nA primeira ou ultima posicao e uma parede\n");
 		return;
 	}
+	int countP = 1;
+	matriz[0][0] = countP++;
 
 	tItem aux;
 	tFila f;
 	FFVazia(&f);
-	int i = 0, j = 0, aux_i = 0, aux_j = 0, count, count_caminho = 0;
+
+	int i, j, aux_i, aux_j, count, count_caminho;
+	int val;
+	double val2;
+	
 	aux.x = i;
 	aux.y = j;
-	Enfileira(&f, aux);
-	while (i < tam && j < tam)
-	{
 
-		if (j == 0 && i == 0)
-		{
-			if (matriz[i + 1][j] == 0)
-			{
+	i = j = aux_i = aux_j = count = count_caminho = 0;
+
+	// printf("%d\n", potencia(2, 5));
+
+	// return;
+	
+	while (i < tam && j < tam) {
+		count_caminho++;
+		
+		if(i == 0) {
+			if(matriz[i + 1][j] == 0) {
+				matriz[i + 1][j] = countP++;
+
 				aux.x = i + 1;
 				aux.y = j;
 				Enfileira(&f, aux);
-				matriz[i][j] = 1;
-				count_caminho++;
+
+				val = manhattan(aux.x, tam - 1, aux.y, tam - 1);
+				val2 = euclidiana(aux.x, tam - 1, aux.y, tam - 1);
+
+				printf("[%d:%d] - (%2d : %lf)\n", aux.x, aux.y, val, val2);
 			}
-			if (matriz[i][j + 1] == 0)
-			{
+			if(j < tam - 1 && matriz[i][j + 1] == 0) {
+				matriz[i][j + 1] = countP++;
+
 				aux.x = i;
 				aux.y = j + 1;
 				Enfileira(&f, aux);
-				matriz[i][j] = 1;
-				count_caminho++;
-			}
-			if (matriz[i][j] != 0)
-			{
-				aux.x = i;
-				aux.y = j;
-				Desenfileira(&f, &aux);
-			}
 
-			i++;
+				val = manhattan(aux.x, tam - 1, aux.y, tam - 1);
+				val2 = euclidiana(aux.x, tam - 1, aux.y, tam - 1);
+
+				printf("[%d:%d] - (%2d : %lf)\n", aux.x, aux.y, val, val2);
+			}
+			if(j > 0 && matriz[i][j - 1] == 0) {
+				matriz[i][j - 1] = countP++;
+
+				aux.x = i;
+				aux.y = j - 1;
+				Enfileira(&f, aux);
+
+				val = manhattan(aux.x, tam - 1, aux.y, tam - 1);
+				val2 = euclidiana(aux.x, tam - 1, aux.y, tam - 1);
+
+				printf("[%d:%d] - (%2d : %lf)\n", aux.x, aux.y, val, val2);
+			}
 		}
-		if (i < tam - 1 && j == 0)
-			printf("\n0");
-		{
-			if (matriz[i - 1][j] == 0)
-			{
+		else if(j == 0) {
+			if(i < tam - 1 && matriz[i + 1][j] == 0) {
+				matriz[i + 1][j] = countP++;
+
+				aux.x = i + 1;
+				aux.y = j;
+				Enfileira(&f, aux);
+
+				val = manhattan(aux.x, tam - 1, aux.y, tam - 1);
+				val2 = euclidiana(aux.x, tam - 1, aux.y, tam - 1);
+
+				printf("[%d:%d] - (%2d : %lf)\n", aux.x, aux.y, val, val2);
+			}
+			if(matriz[i][j + 1] == 0) {
+				matriz[i][j + 1] = countP++;
+
+				aux.x = i;
+				aux.y = j + 1;
+				Enfileira(&f, aux);
+
+				val = manhattan(aux.x, tam - 1, aux.y, tam - 1);
+				val2 = euclidiana(aux.x, tam - 1, aux.y, tam - 1);
+
+				printf("[%d:%d] - (%2d : %lf)\n", aux.x, aux.y, val, val2);
+			}
+			if(matriz[i - 1][j] == 0) {
+				matriz[i - 1][j] = countP++;
+
 				aux.x = i - 1;
 				aux.y = j;
 				Enfileira(&f, aux);
-				matriz[i][j] = 1;
-				count_caminho--;
+
+				val = manhattan(aux.x, tam - 1, aux.y, tam - 1);
+				val2 = euclidiana(aux.x, tam - 1, aux.y, tam - 1);
+
+				printf("[%d:%d] - (%2d : %lf)\n", aux.x, aux.y, val, val2);
 			}
-			if (matriz[i][j + 1] == 0)
-			{
-				aux.x = i;
-				aux.y = j + 1;
-				Enfileira(&f, aux);
-				matriz[i][j] = 1;
-				count_caminho++;
-			}
-			if (matriz[i][j] != 0)
-			{
-				aux.x = i;
+		}
+		else if(j == tam - 1) {
+			if(i < tam - 1 && matriz[i + 1][j] == 0) {
+				matriz[i + 1][j] = countP++;
+
+				aux.x = i + 1;
 				aux.y = j;
-				Desenfileira(&f, &aux);
-			}
-			count = 0;
-			while (aux_j != i)
-			{
-				if (count == 0)
-				{
-					aux_i = i;
-					aux_j = j;
-				}
-				aux_i--;
-				aux_j++;
-				if (matriz[aux_i][aux_j + 1] == 0)
-				{
-					aux.x = aux_i;
-					aux.y = aux_j + 1;
-					Enfileira(&f, aux);
-					matriz[i][j] = 1;
-					count_caminho++;
-				}
-				if (matriz[i][j] != 0)
-				{
-					aux.x = i;
-					aux.y = j;
-					Desenfileira(&f, &aux);
-				}
-				count++;
-			}
-			i++;
-		}
-		if (i == tam - 1 && j != tam - 1)
-		{
-			aux_i = 0;
-			aux_j = 0;
-			if (matriz[i][j + 1] == 0)
-			{
-				aux.x = i;
-				aux.y = j + 1;
 				Enfileira(&f, aux);
-				matriz[i][j] = 1;
-				count_caminho++;
+
+				val = manhattan(aux.x, tam - 1, aux.y, tam - 1);
+				val2 = euclidiana(aux.x, tam - 1, aux.y, tam - 1);
+
+				printf("[%d:%d] - (%2d : %lf)\n", aux.x, aux.y, val, val2);
 			}
-			if (matriz[i][j] != 0)
-			{
-				aux.x = i;
+			if(matriz[i - 1][j] == 0) {
+				matriz[i - 1][j] = countP++;
+
+				aux.x = i - 1;
 				aux.y = j;
-				Desenfileira(&f, &aux);
+				Enfileira(&f, aux);
+
+				val = manhattan(aux.x, tam - 1, aux.y, tam - 1);
+				val2 = euclidiana(aux.x, tam - 1, aux.y, tam - 1);
+
+				printf("[%d:%d] - (%2d : %lf)\n", aux.x, aux.y, val, val2);
 			}
-			count = 0;
-			while (aux_j != i - 1)
-			{
-				if (count == 0)
-				{
-					aux_i = i;
-					aux_j = j;
-				}
-				aux_i--;
-				aux_j++;
-				if (matriz[aux_i][aux_j + 1] == 0)
-				{
-					aux.x = aux_i;
-					aux.y = aux_j + 1;
-					Enfileira(&f, aux);
-					matriz[i][j] = 1;
-					count_caminho++;
-				}
-				if (matriz[i][j] != 0)
-				{
-					aux.x = i;
-					aux.y = j;
-					Desenfileira(&f, &aux);
-				}
-				count++;
+			if(matriz[i][j - 1] == 0) {
+				matriz[i][j - 1] = countP++;
+
+				aux.x = i;
+				aux.y = j - 1;
+				Enfileira(&f, aux);
+
+				val = manhattan(aux.x, tam - 1, aux.y, tam - 1);
+				val2 = euclidiana(aux.x, tam - 1, aux.y, tam - 1);
+
+				printf("[%d:%d] - (%2d : %lf)\n", aux.x, aux.y, val, val2);
 			}
-			j++;
 		}
-		if (i == tam - 1 && j == tam - 1)
-		{
-			if (matriz[i][j + 1] == 0)
-			{
+		else if(i == tam - 1) {
+			if(matriz[i][j + 1] == 0) {
+				matriz[i][j + 1] = countP++;
+
 				aux.x = i;
 				aux.y = j + 1;
 				Enfileira(&f, aux);
-				matriz[i][j] = 1;
-				count_caminho++;
+
+				val = manhattan(aux.x, tam - 1, aux.y, tam - 1);
+				val2 = euclidiana(aux.x, tam - 1, aux.y, tam - 1);
+
+				printf("[%d:%d] - (%2d : %lf)\n", aux.x, aux.y, val, val2);
 			}
-			if (matriz[i][j] != 0)
-			{
-				aux.x = i;
+			if(matriz[i - 1][j] == 0) {
+				matriz[i - 1][j] = countP++;
+
+				aux.x = i - 1;
 				aux.y = j;
-				Desenfileira(&f, &aux);
+				Enfileira(&f, aux);
+
+				val = manhattan(aux.x, tam - 1, aux.y, tam - 1);
+				val2 = euclidiana(aux.x, tam - 1, aux.y, tam - 1);
+
+				printf("[%d:%d] - (%2d : %lf)\n", aux.x, aux.y, val, val2);
 			}
-			count_caminho++;
-			i = tam;
-			j = tam;
+			if(matriz[i][j - 1] == 0) {
+				matriz[i][j - 1] = countP++;
+
+				aux.x = i;
+				aux.y = j - 1;
+				Enfileira(&f, aux);
+
+				val = manhattan(aux.x, tam - 1, aux.y, tam - 1);
+				val2 = euclidiana(aux.x, tam - 1, aux.y, tam - 1);
+
+				printf("[%d:%d] - (%2d : %lf)\n", aux.x, aux.y, val, val2);
+			}
 		}
-		if(i < tam - 1 && matriz[i + 1][j] == 0){
+		else {
+			if(matriz[i + 1][j] == 0) {
+				matriz[i + 1][j] = countP++;
+
+				aux.x = i + 1;
+				aux.y = j;
+				Enfileira(&f, aux);
+
+				val = manhattan(aux.x, tam - 1, aux.y, tam - 1);
+				val2 = euclidiana(aux.x, tam - 1, aux.y, tam - 1);
+
+				printf("[%d:%d] - (%2d : %lf)\n", aux.x, aux.y, val, val2);
+			}
+			if(matriz[i][j + 1] == 0) {
+				matriz[i][j + 1] = countP++;
+
 				aux.x = i;
 				aux.y = j + 1;
 				Enfileira(&f, aux);
-				matriz[i][j] = 1;
-				count_caminho++;
-				j++;
+
+				val = manhattan(aux.x, tam - 1, aux.y, tam - 1);
+				val2 = euclidiana(aux.x, tam - 1, aux.y, tam - 1);
+
+				printf("[%d:%d] - (%2d : %lf)\n", aux.x, aux.y, val, val2);
+			}
+			if(matriz[i - 1][j] == 0) {
+				matriz[i - 1][j] = countP++;
+
+				aux.x = i - 1;
+				aux.y = j;
+				Enfileira(&f, aux);
+
+				val = manhattan(aux.x, tam - 1, aux.y, tam - 1);
+				val2 = euclidiana(aux.x, tam - 1, aux.y, tam - 1);
+
+				printf("[%d:%d] - (%2d : %lf)\n", aux.x, aux.y, val, val2);
+			}
+			if(matriz[i][j - 1] == 0) {
+				matriz[i][j - 1] = countP++;
+
+				aux.x = i;
+				aux.y = j - 1;
+				Enfileira(&f, aux);
+
+				val = manhattan(aux.x, tam - 1, aux.y, tam - 1);
+				val2 = euclidiana(aux.x, tam - 1, aux.y, tam - 1);
+
+				printf("[%d:%d] - (%2d : %lf)\n", aux.x, aux.y, val, val2);
+			}
 		}
+		Desenfileira(&f, &aux);
+
+		// printf("final: [%d:%d] - [%d:%d]\n", i, j, aux.x, aux.y);
+		i = aux.x;
+		j = aux.y;
+
+		if(i == tam - 1 && j == tam - 1) break;
 	}
 	printf("\n BFS %d interacoes!\n", count_caminho);
+}
+
+int manhattan(int x1, int x2, int y1, int y2) {
+	return modulo((x1 - x2)) + modulo(y1 - y2);
+}
+
+double euclidiana(int x1, int x2, int y1, int y2) {
+	double a = potencia(x1 - x2, 2);
+	double b = potencia(y1 - y2, 2);
+	return raiz(a + b);
+}
+
+double raiz(double val) {
+	double precisao = 0.000001;
+	double res = 1;
+	double b = val, a = 1;
+
+	while((b - a) >= precisao) {
+		b = (a + b) / 2;
+		a = val / b;
+	}
+	return b;
+}
+
+double potencia(double val, double exp) {
+	double res = 1;
+
+	while(exp > 0) {
+		res = res * val;
+		exp--;
+	}
+	return res;
 }
