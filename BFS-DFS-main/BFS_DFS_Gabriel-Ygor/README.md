@@ -6,7 +6,7 @@
 
 
 <h1>Problema </h1>
-### Deverá ser entregue um trabalho contemplando as modificações necessárias do <code>BFS </code> para torna-lo um algoritmo heurístico, chamado <code>A* </code>. 
+<b> Deverá ser entregue um trabalho contemplando as modificações necessárias do <code>BFS </code> para torna-lo um algoritmo heurístico, chamado <code>A* </code>. </b>
 <br></br>
 * Entregar a codificação devidamente elaborada sob o modelo de execução estabelecido, bem como, a comparação do algoritmo <code> A* </code> para as heurísticas euclidiâna e manhattan
 <br></br>
